@@ -60,6 +60,24 @@ const Dashboard = () => {
     }
   };
 
+  // Render star rating buttons
+  const renderRatingButtons = () => (
+    <div className="mb-3">
+      {[1, 2, 3, 4, 5].map((num) => (
+        <button
+          key={num}
+          type="button"
+          className={`btn btn-sm me-1 ${rating >= num ? "btn-warning" : "btn-outline-secondary"}`}
+          onClick={() => setRating(num)}
+          aria-label={`Rate ${num}`}
+          style={{ fontSize: "1.5rem" }}
+        >
+          <i className={`bi ${rating >= num ? "bi-star-fill" : "bi-star"}`}></i>
+        </button>
+      ))}
+    </div>
+  );
+
   return (
     <div className="container mt-4">
       <h2>Welcome, {user?.name}</h2>
@@ -81,25 +99,36 @@ const Dashboard = () => {
       )}
 
       {/* Stores Table */}
-      <table className="table table-bordered">
+      <table className="table table-bordered" style={{ border: "2px solid black" }}>
         <thead>
           <tr>
-            <th>Store Name</th>
-            <th>Address</th>
-            <th>Average Rating</th>
-            <th>Your Rating</th>
-            <th>Action</th>
+            <th style={{ border: "2px solid black" }}>Store Name</th>
+            <th style={{ border: "2px solid black" }}>Address</th>
+            <th style={{ border: "2px solid black" }}>Average Rating</th>
+            <th style={{ border: "2px solid black" }}>Your Rating</th>
+            <th style={{ border: "2px solid black" }}>Action</th>
           </tr>
         </thead>
         <tbody>
           {stores.length > 0 ? (
             stores.map((store) => (
               <tr key={store.id}>
-                <td>{store.name}</td>
-                <td>{store.address}</td>
-                <td>{store.avgRating || "-"}</td>
-                <td>{store.userRating || "-"}</td>
-                <td>
+                <td style={{ border: "2px solid black" }}>{store.name}</td>
+                <td style={{ border: "2px solid black" }}>{store.address}</td>
+                <td style={{ border: "2px solid black" }}>{store.avgRating || "-"}</td>
+                <td style={{ border: "2px solid black" }}>
+                  {store.userRating
+                    ? [...Array(5)].map((_, i) => (
+                        <i
+                          key={i}
+                          className={`bi ${
+                            i < store.userRating ? "bi-star-fill text-warning" : "bi-star"
+                          }`}
+                        ></i>
+                      ))
+                    : "-"}
+                </td>
+                <td style={{ border: "2px solid black" }}>
                   {user?.role === "user" && (
                     <>
                       {!store.userRating ? (
@@ -119,9 +148,9 @@ const Dashboard = () => {
                       )}
                     </>
                   )}
-                  {user?.role === "owner" && (
+                  {(user?.role === "owner" || user?.role === "admin") && (
                     <button
-                      className="btn btn-warning btn-sm"
+                      className="btn btn-warning btn-sm me-2"
                       onClick={() => navigate(`/edit-store/${store.id}`)}
                     >
                       Edit
@@ -140,7 +169,7 @@ const Dashboard = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="5" className="text-center">
+              <td colSpan="5" className="text-center" style={{ border: "2px solid black" }}>
                 No stores available.
               </td>
             </tr>
@@ -163,19 +192,8 @@ const Dashboard = () => {
                   onClick={() => setSelectedStore(null)}
                 ></button>
               </div>
-              <div className="modal-body">
-                <select
-                  className="form-select"
-                  value={rating}
-                  onChange={(e) => setRating(e.target.value)}
-                >
-                  <option value="0">Select rating</option>
-                  {[1, 2, 3, 4, 5].map((num) => (
-                    <option key={num} value={num}>
-                      {num}
-                    </option>
-                  ))}
-                </select>
+              <div className="modal-body text-center">
+                {renderRatingButtons()}
               </div>
               <div className="modal-footer">
                 <button

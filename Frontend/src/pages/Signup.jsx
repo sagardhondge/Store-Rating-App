@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import API from '../api';
+import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -36,6 +38,11 @@ const Signup = () => {
     try {
       const res = await API.post('/auth/signup', formData);
       setMessage(res.data.message || 'Signup successful');
+
+      // Redirect to login page after successful signup
+      setTimeout(() => {
+        navigate('/login');
+      }, 1500);
     } catch (error) {
       setMessage(error.response?.data?.message || 'Signup failed');
     }

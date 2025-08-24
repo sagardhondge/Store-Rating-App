@@ -30,8 +30,16 @@ const Navbar = () => {
                 <li className="nav-item">
                   <Link className="nav-link" to="/dashboard">Dashboard</Link>
                 </li>
-                
-                {/* New Stores Button */}
+                {/* Button to render Stores.jsx for rating stores */}
+                <li className="nav-item">
+                  <button
+                    className="btn btn-primary btn-sm ms-2"
+                    onClick={() => navigate("/stores")}
+                  >
+                    Rate Store
+                  </button>
+                </li>
+                {/* Existing Add Store button */}
                 <li className="nav-item">
                   <button
                     className="btn btn-success btn-sm ms-2"
@@ -40,7 +48,6 @@ const Navbar = () => {
                     Stores
                   </button>
                 </li>
-
                 <li className="nav-item">
                   <button className="btn btn-danger btn-sm ms-2" onClick={handleLogout}>
                     Logout

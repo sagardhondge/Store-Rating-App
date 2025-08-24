@@ -35,7 +35,13 @@ function AddStore() {
   const handleAddStore = async (e) => {
     e.preventDefault();
     const userData = JSON.parse(localStorage.getItem("user"));
-    const owner_user_id = userData?.role === "owner" ? userData.id : null;
+
+    if (!userData || userData.role.toUpperCase() !== "OWNER") {
+      setMessage("Only OWNER users can add stores");
+      return;
+    }
+
+    const owner_user_id = userData.id;
 
     try {
       await API.post("/stores", { name, email, address, owner_user_id });
@@ -47,7 +53,7 @@ function AddStore() {
       fetchStores(); // Refresh the store list
     } catch (err) {
       console.error(err);
-      setMessage("Failed to add store");
+      setMessage(err.response?.data?.message || "Failed to add store");
     }
   };
 
